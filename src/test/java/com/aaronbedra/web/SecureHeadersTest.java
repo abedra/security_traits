@@ -1,9 +1,6 @@
 package com.aaronbedra.web;
 
-import com.aaronbedra.web.headers.Header;
-import com.aaronbedra.web.headers.XContentTypeOptions;
-import com.aaronbedra.web.headers.XFrameOptions;
-import com.aaronbedra.web.headers.XXSSProtection;
+import com.aaronbedra.web.headers.*;
 import com.jnape.palatable.lambda.io.IO;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,5 +41,10 @@ public class SecureHeadersTest {
     @Test
     public void xContentTypeOptions() {
         testHeader(XContentTypeOptions.class);
+    }
+
+    @Test
+    public void strictTransportSecurity() {
+        testHeader(StrictTransportSecurity.class);
     }
 }
