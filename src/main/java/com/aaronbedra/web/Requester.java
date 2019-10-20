@@ -30,15 +30,6 @@ public class Requester {
         }));
     }
 
-    public <T extends Header> IO<T> getHeaderIO(Headers headers, Class<T> headerClass) {
-        return io(() -> {
-            String name = (String) headerClass.getMethod("getName").invoke(null);
-            return headerClass
-                    .getConstructor(new Class[]{String.class})
-                    .newInstance(headers.get(name));
-        });
-    }
-
     private IO<Request> buildRequestIO() {
         return io(() -> new Request.Builder().url(hostname).build());
     }
