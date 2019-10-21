@@ -27,14 +27,12 @@ Simply create a new test file and follow the examples below. Please be aware tha
 ```java
 @RunWith(Traits.class)
 public class GetRepsheetTest {
-    @TestTraits(SecureHeaders.class)
-    public IO<Headers> secureHeaders() {
-        return requester("https://getrepsheet.com").getHeadersIO();
-    }
-
-    @TestTraits(SecureRedirect.class)
-    public IO<Response> secureRedirect() {
-        return requester("http://getrepsheet.com").getResponseIO();
+    @TestTraits({
+            SecureHeaders.class,
+            SecureRedirect.class
+    })
+    public IO<Requester> secureHeaders() {
+        return requesterIO("getrepsheet.com");
     }
 }
 ```

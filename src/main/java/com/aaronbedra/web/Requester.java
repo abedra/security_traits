@@ -23,19 +23,27 @@ public class Requester {
                 .build();
     }
 
-    public static Requester requester(String hostname) {
-        return new Requester(hostname);
+    public static IO<Requester> requesterIO(String hostname){
+        return io(() -> new Requester(hostname));
     }
 
-    public IO<Response> getResponseIO() {
-        return buildRequestIO().flatMap(request -> io(() -> okHttpClient.newCall(request).execute()));
+    public IO<Response> getResponseIO(String url) {
+        return buildRequestIO(url).flatMap(request -> io(() -> okHttpClient.newCall(request).execute()));
     }
 
-    public IO<Headers> getHeadersIO() {
-        return getResponseIO().fmap(Response::headers);
+    public IO<Headers> getHeadersIO(String url) {
+        return getResponseIO(url).fmap(Response::headers);
     }
 
-    private IO<Request> buildRequestIO() {
-        return io(() -> new Request.Builder().url(hostname).build());
+    private IO<Request> buildRequestIO(String url) {
+        return io(() -> new Request.Builder().url(url).build());
+    }
+
+    public String getHttpUrl() {
+        return "http://" + hostname;
+    }
+
+    public String getHttpsUrl() {
+        return "https://" + hostname;
     }
 }
