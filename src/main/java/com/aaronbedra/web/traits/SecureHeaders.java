@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SecureHeaders implements Trait<IO<Requester>> {
     @Override
-    public void test(IO<Requester> requesterIO) {
+    public void test(IO<Requester> requester) {
         var headerList = asList(
                 XFrameOptions.class,
                 XContentTypeOptions.class,
@@ -23,29 +23,31 @@ public class SecureHeaders implements Trait<IO<Requester>> {
                 XDownloadOptions.class
         );
 
-
-        headerList.forEach(headerClass -> getAndAssertSecure(requesterIO, headerClass));
+        headerList.forEach(headerClass -> getAndAssertSecure(requester, headerClass));
     }
 
-    private <T extends Header> void getAndAssertSecure(IO<Requester> requesterIO, Class<T> headerClass) {
-        requesterIO.flatMap(requester ->
-                requester.getHeadersIO(requester.getHttpsUrl()).flatMap(headers ->
-                        getHeaderIO(headers, headerClass).flatMap(header -> assertSecureHeader(header, headerClass))
+    private <T extends Header> void getAndAssertSecure(IO<Requester> requester, Class<T> headerClass) {
+        requester.flatMap(instance ->
+                instance.getHeaders(instance.getHttpsUrl()).flatMap(headers ->
+                        getHeader(headers, headerClass).flatMap(header -> assertSecureHeader(header, headerClass))
                 )
         ).unsafePerformIO();
     }
 
-    private <T extends Header> IO<T> getHeaderIO(Headers headers, Class<T> headerClass) {
+    private <T extends Header> IO<T> getHeader(Headers headers, Class<T> headerClass) {
         return io(() -> headerClass
                 .getConstructor(new Class[]{String.class})
                 .newInstance(headers.get(invokeStaticGetName(headerClass))));
     }
 
     private <T extends Header> IO<T> assertSecureHeader(T header, Class<T> headerClass) {
-        return io(() -> assertEquals(invokeStaticGetName(headerClass), header.getExpectedValue(), header.getValue())).discardL(io(header));
+        return io(() ->
+                assertEquals(invokeStaticGetName(headerClass), header.getExpectedValue(), header.getValue()))
+                .discardL(io(header));
     }
 
-    private <T extends Header> String invokeStaticGetName(Class<T> headerClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private <T extends Header> String invokeStaticGetName(Class<T> headerClass)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         return (String) headerClass.getMethod("getName").invoke(null);
     }
 }

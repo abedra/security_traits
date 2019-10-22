@@ -7,7 +7,7 @@ import com.jnape.palatable.traitor.annotations.TestTraits;
 import com.jnape.palatable.traitor.runners.Traits;
 import org.junit.runner.RunWith;
 
-import static com.aaronbedra.web.Requester.requesterIO;
+import static com.aaronbedra.web.Requester.requester;
 
 @RunWith(Traits.class)
 public class GetRepsheetTest {
@@ -16,6 +16,6 @@ public class GetRepsheetTest {
             SecureRedirect.class
     })
     public IO<Requester> secureHeaders() {
-        return requesterIO("getrepsheet.com");
+        return requester("getrepsheet.com");
     }
 }

@@ -12,12 +12,12 @@ import static org.junit.Assert.assertEquals;
 
 public class SecureRedirect implements Trait<IO<Requester>> {
     @Override
-    public void test(IO<Requester> requesterIO) {
-        requesterIO.flatMap(requester ->
-                requester.getResponseIO(requester.getHttpUrl()).flatMap(response -> {
+    public void test(IO<Requester> requester) {
+        requester.flatMap(instance ->
+                instance.getResponse(instance.getHttpUrl()).flatMap(response -> {
                     assertEquals(301, response.code());
 
-                    var expected = requester.getHttpsUrl() + response.request().url().encodedPath();
+                    var expected = instance.getHttpsUrl() + response.request().url().encodedPath();
                     return maybe(response.headers().get("Location")).match(
                             __ -> io((SideEffect) Assert::fail),
                             location -> io(() -> assertEquals(expected, location))
