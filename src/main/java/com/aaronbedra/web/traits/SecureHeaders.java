@@ -20,7 +20,8 @@ public class SecureHeaders implements Trait<IO<Requester>> {
                 XContentTypeOptions.class,
                 XXSSProtection.class,
                 StrictTransportSecurity.class,
-                XDownloadOptions.class
+                XDownloadOptions.class,
+                XPermittedCrossDomainPolicy.class
         );
 
         headerList.forEach(headerClass -> getAndAssertSecure(requester, headerClass));
