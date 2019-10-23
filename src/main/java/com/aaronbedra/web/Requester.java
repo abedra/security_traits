@@ -2,10 +2,7 @@ package com.aaronbedra.web;
 
 import com.jnape.palatable.lambda.io.IO;
 import lombok.Value;
-import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 
 import static com.jnape.palatable.lambda.io.IO.io;
 
@@ -26,6 +23,7 @@ public class Requester {
                         .newBuilder()
                         .followRedirects(false)
                         .followSslRedirects(false)
+                        .cookieJar(new SimpleCookieJar())
                         .build())
         );
     }
@@ -36,6 +34,10 @@ public class Requester {
 
     public IO<Headers> getHeaders(String url) {
         return getResponse(url).fmap(Response::headers);
+    }
+
+    public IO<CookieJar> getCookieJar() {
+        return io(okHttpClient::cookieJar);
     }
 
     private IO<Request> buildRequest(String url) {

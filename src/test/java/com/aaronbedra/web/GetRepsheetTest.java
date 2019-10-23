@@ -1,5 +1,6 @@
 package com.aaronbedra.web;
 
+import com.aaronbedra.web.traits.SecureCookies;
 import com.aaronbedra.web.traits.SecureHeaders;
 import com.aaronbedra.web.traits.SecureRedirect;
 import com.jnape.palatable.lambda.io.IO;
@@ -13,7 +14,8 @@ import static com.aaronbedra.web.Requester.requester;
 public class GetRepsheetTest {
     @TestTraits({
             SecureHeaders.class,
-            SecureRedirect.class
+            SecureRedirect.class,
+            SecureCookies.class
     })
     public IO<Requester> secureHeaders() {
         return requester("getrepsheet.com");
