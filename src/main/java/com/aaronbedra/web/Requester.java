@@ -4,6 +4,7 @@ import com.jnape.palatable.lambda.io.IO;
 import lombok.Value;
 import okhttp3.*;
 
+import static com.aaronbedra.web.SimpleCookieJar.simpleCookieJar;
 import static com.jnape.palatable.lambda.io.IO.io;
 
 @Value
@@ -23,7 +24,7 @@ public class Requester {
                         .newBuilder()
                         .followRedirects(false)
                         .followSslRedirects(false)
-                        .cookieJar(new SimpleCookieJar())
+                        .cookieJar(simpleCookieJar())
                         .build())
         );
     }
