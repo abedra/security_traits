@@ -1,9 +1,13 @@
 plugins {
-    id 'java'
+    id "java"
 }
 
-group 'com.aaronbedra'
-version '0.0.1-SNAPSHOT'
+apply plugin: "maven"
+apply plugin: "signing"
+
+group "com.aaronbedra"
+archivesBaseName = "security-traits"
+version "0.0.1"
 
 sourceCompatibility = 11
 
@@ -12,12 +16,72 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
-    implementation 'com.jnape.palatable:lambda:5.0.0'
-    implementation 'com.jnape.palatable:traitor:1.3.1'
+    implementation "com.squareup.okhttp3:okhttp:4.2.2"
+    implementation "com.jnape.palatable:lambda:5.0.0"
+    implementation "com.jnape.palatable:traitor:1.3.1"
 
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "junit:junit:4.12"
 
-    compileOnly 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    compileOnly "org.projectlombok:lombok:1.18.10"
+    annotationProcessor "org.projectlombok:lombok:1.18.10"
+}
+
+task javadocJar(type: Jar) {
+    classifier = "javadoc"
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name "security-traits"
+                packaging "jar"
+                description "Web Application Security Traits"
+                url "https://github.com/abedra/security_traits"
+
+                scm {
+                    url "https://github.com/abedra/security_traits"
+                }
+
+                licenses {
+                    license {
+                        name "The MIT License"
+                        url "https://opensource.org/licenses/MIT"
+                    }
+                }
+
+                developers {
+                    developer {
+                        id "abedra"
+                        name "Aaron Bedra"
+                        email "aaron@aaronbedra.com"
+                    }
+                }
+            }
+        }
+    }
 }
