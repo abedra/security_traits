@@ -31,10 +31,11 @@ Simply create a new test file and follow the examples below. Please be aware tha
 public class GetRepsheetTest {
     @TestTraits({
             SecureHeaders.class,
-            SecureRedirect.class
+            SecureRedirect.class,
+            SecureCookies.class
     })
     public IO<Requester> secureHeaders() {
-        return requesterIO("getrepsheet.com");
+        return requester("getrepsheet.com");
     }
 }
 ```
@@ -58,6 +59,10 @@ Makes the following assertions:
 
 * HTTP response status is 301
 * Location header is the HTTPS version of the requested URL.
+
+### Secure Cookies
+
+Collects all cookies presented in the response and ensures they are marked `HttpOnly` and `secure`
 
 ## Contributing
 
