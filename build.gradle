@@ -40,48 +40,48 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-signing {
-    sign configurations.archives
-}
+//signing {
+//    sign configurations.archives
+//}
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-
-            pom.project {
-                name "security-traits"
-                packaging "jar"
-                description "Web Application Security Traits"
-                url "https://github.com/abedra/security_traits"
-
-                scm {
-                    url "https://github.com/abedra/security_traits"
-                }
-
-                licenses {
-                    license {
-                        name "The MIT License"
-                        url "https://opensource.org/licenses/MIT"
-                    }
-                }
-
-                developers {
-                    developer {
-                        id "abedra"
-                        name "Aaron Bedra"
-                        email "aaron@aaronbedra.com"
-                    }
-                }
-            }
-        }
-    }
-}
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+//
+//            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//
+//            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+//                authentication(userName: ossrhUsername, password: ossrhPassword)
+//            }
+//
+//            pom.project {
+//                name "security-traits"
+//                packaging "jar"
+//                description "Web Application Security Traits"
+//                url "https://github.com/abedra/security_traits"
+//
+//                scm {
+//                    url "https://github.com/abedra/security_traits"
+//                }
+//
+//                licenses {
+//                    license {
+//                        name "The MIT License"
+//                        url "https://opensource.org/licenses/MIT"
+//                    }
+//                }
+//
+//                developers {
+//                    developer {
+//                        id "abedra"
+//                        name "Aaron Bedra"
+//                        email "aaron@aaronbedra.com"
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
