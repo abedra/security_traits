@@ -11,7 +11,7 @@ import static com.aaronbedra.password.Password.generatePassword;
 @RunWith(Traits.class)
 public class PasswordTest {
     @TestTraits({
-            SecureMinimumLength.class,
+            AtLeastTwelveCharacters.class,
             AtLeastOneNumber.class,
             AtLeastOneUpper.class,
             AtLeastOneLower.class,
@@ -21,9 +21,7 @@ public class PasswordTest {
         return generatePassword(12).getValue();
     }
 
-    @TestTraits({
-            Unique.class
-    })
+    @TestTraits(Unique.class)
     public Fn0<String> passwordGeneratorMultipleExecutions() {
         return () -> generatePassword(12).getValue();
     }
