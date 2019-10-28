@@ -3,33 +3,53 @@ package com.aaronbedra.password;
 import lombok.Value;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
+
+import static com.aaronbedra.password.CharacterRange.*;
+import static java.lang.String.valueOf;
 
 @Value
 public class Password {
     String value;
-    SecureRandom secureRandom;
 
     private Password(String value) {
         this.value = value;
-        this.secureRandom = new SecureRandom();
     }
 
     public static Password password(String password) {
         return new Password(password);
     }
 
-    public static Password generatePassword(int length) {
-        return password(randomString(length));
+    public static Password generatePassword(PasswordConfiguration configuration) {
+        var secureRandom = new SecureRandom();
+        var numbers = randomChars(secureRandom, NUMBER, configuration.getNumber());
+        var uppers = randomChars(secureRandom, UPPER, configuration.getUpper());
+        var lowers = randomChars(secureRandom, LOWER, configuration.getLower());
+        var specials = randomChars(secureRandom, SPECIAL, configuration.getSpecial());
+
+        var currentSize = numbers.size() + uppers.size() + lowers.size() + specials.size();
+        var filler = randomChars(secureRandom, ALL, configuration.getLength() - currentSize);
+
+        ArrayList<Character> combined = new ArrayList<>();
+        combined.addAll(numbers);
+        combined.addAll(uppers);
+        combined.addAll(lowers);
+        combined.addAll(specials);
+        combined.addAll(filler);
+
+        return password(valueOf(combined));
     }
 
-    private static String randomString(int length) {
-        SecureRandom secureRandom = new SecureRandom();
-        StringBuilder builder = new StringBuilder();
+    private static ArrayList<Character> randomChars(
+            SecureRandom secureRandom,
+            ArrayList<Character> range,
+            int length) {
 
-        for(int i = 0; i < length; i++) {
-            builder.append((char)secureRandom.nextInt(128));
+        ArrayList<Character> characters = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            characters.add(range.get(secureRandom.nextInt(range.size())));
         }
 
-        return builder.toString();
+        return characters;
     }
 }

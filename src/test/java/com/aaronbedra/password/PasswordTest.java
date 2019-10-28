@@ -7,6 +7,7 @@ import com.jnape.palatable.traitor.runners.Traits;
 import org.junit.runner.RunWith;
 
 import static com.aaronbedra.password.Password.generatePassword;
+import static com.aaronbedra.password.PasswordConfiguration.passwordConfiguration;
 
 @RunWith(Traits.class)
 public class PasswordTest {
@@ -18,11 +19,15 @@ public class PasswordTest {
             AtLeastOneSpecial.class
     })
     public String passwordGeneratorSingleExecution() {
-        return generatePassword(12).getValue();
+        return generatePassword(getConfiguration()).getValue();
     }
 
     @TestTraits(Unique.class)
     public Fn0<String> passwordGeneratorMultipleExecutions() {
-        return () -> generatePassword(12).getValue();
+        return () -> generatePassword(getConfiguration()).getValue();
+    }
+
+    private PasswordConfiguration getConfiguration() {
+        return passwordConfiguration(12, 1, 1, 1, 1);
     }
 }
