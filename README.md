@@ -42,7 +42,9 @@ public class GetRepsheetTest {
 
 ## Traits
 
-### Secure Headers
+### Web
+
+#### Secure Headers
 
 Makes the following assertions on response headers:
 
@@ -53,16 +55,32 @@ Makes the following assertions on response headers:
 |X-XSS-Protection          | 1; mode=block                      |
 |Strict-Transport-Security | max-age=31536000; includeSubDomains|
 
-### Secure Redirect
+#### Secure Redirect
 
 Makes the following assertions:
 
 * HTTP response status is 301
 * Location header is the HTTPS version of the requested URL.
 
-### Secure Cookies
+#### Secure Cookies
 
 Collects all cookies presented in the response and ensures they are marked `HttpOnly` and `secure`
+
+### Password
+
+#### Password Generation
+
+The following traits are available on the instance of a password:
+
+* AtLeastOneNumber
+* AtLeastOneUpper
+* AtLeastOneLower
+* AtLeastOneSpecial
+* AtLeastTwelveCharacters
+
+The following traits are available on the password generator function:
+
+* Unique
 
 ## Contributing
 
