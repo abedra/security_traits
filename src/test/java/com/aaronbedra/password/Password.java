@@ -1,6 +1,6 @@
 package com.aaronbedra.password;
 
-import lombok.Value;
+import com.aaronbedra.tiny.SensitiveString;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -8,12 +8,26 @@ import java.util.ArrayList;
 import static com.aaronbedra.password.CharacterRange.*;
 import static java.lang.String.valueOf;
 
-@Value
-public class Password {
-    String value;
+public class Password implements SensitiveString {
+    private final String value;
 
     private Password(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return SensitiveString.REDACTED_VALUE;
+    }
+
+    @Override
+    public String getValue() {
+        return SensitiveString.REDACTED_VALUE;
+    }
+
+    @Override
+    public String unsafeToString() {
+        return value;
     }
 
     public static Password password(String password) {
@@ -30,12 +44,13 @@ public class Password {
         var currentSize = numbers.size() + uppers.size() + lowers.size() + specials.size();
         var filler = randomChars(secureRandom, ALL, configuration.getLength() - currentSize);
 
-        ArrayList<Character> combined = new ArrayList<>();
-        combined.addAll(numbers);
-        combined.addAll(uppers);
-        combined.addAll(lowers);
-        combined.addAll(specials);
-        combined.addAll(filler);
+        ArrayList<Character> combined = new ArrayList<>() {{
+            addAll(numbers);
+            addAll(uppers);
+            addAll(lowers);
+            addAll(specials);
+            addAll(filler);
+        }};
 
         return password(valueOf(combined));
     }
