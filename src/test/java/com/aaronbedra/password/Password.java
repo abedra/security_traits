@@ -1,6 +1,7 @@
 package com.aaronbedra.password;
 
 import com.aaronbedra.tiny.SensitiveString;
+import com.aaronbedra.tiny.TinyType;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -36,13 +37,13 @@ public class Password implements SensitiveString {
 
     public static Password generatePassword(PasswordConfiguration configuration) {
         var secureRandom = new SecureRandom();
-        var numbers = randomChars(secureRandom, NUMBER, configuration.getNumber());
-        var uppers = randomChars(secureRandom, UPPER, configuration.getUpper());
-        var lowers = randomChars(secureRandom, LOWER, configuration.getLower());
-        var specials = randomChars(secureRandom, SPECIAL, configuration.getSpecial());
+        var numbers = randomChars(secureRandom, NUMBER, configuration.getNumber().getValue());
+        var uppers = randomChars(secureRandom, UPPER, configuration.getUpper().getValue());
+        var lowers = randomChars(secureRandom, LOWER, configuration.getLower().getValue());
+        var specials = randomChars(secureRandom, SPECIAL, configuration.getSpecial().getValue());
 
         var currentSize = numbers.size() + uppers.size() + lowers.size() + specials.size();
-        var filler = randomChars(secureRandom, ALL, configuration.getLength() - currentSize);
+        var filler = randomChars(secureRandom, ALL, configuration.getLength().getValue() - currentSize);
 
         ArrayList<Character> combined = new ArrayList<>() {{
             addAll(numbers);
@@ -55,7 +56,7 @@ public class Password implements SensitiveString {
         return password(valueOf(combined));
     }
 
-    private static ArrayList<Character> randomChars(
+    private static <T extends TinyType<Integer>> ArrayList<Character> randomChars(
             SecureRandom secureRandom,
             ArrayList<Character> range,
             int length) {

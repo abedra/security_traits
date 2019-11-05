@@ -11,6 +11,11 @@ import org.junit.runner.RunWith;
 import static com.aaronbedra.password.Password.generatePassword;
 import static com.aaronbedra.password.Password.password;
 import static com.aaronbedra.password.PasswordConfiguration.passwordConfiguration;
+import static com.aaronbedra.password.PasswordRequiredLength.passwordRequiredLength;
+import static com.aaronbedra.password.PasswordRequiredLowerCaseCharacters.passwordRequiredLowerCaseCharacters;
+import static com.aaronbedra.password.PasswordRequiredNumberCharacters.passwordRequiredNumberCharacters;
+import static com.aaronbedra.password.PasswordRequiredSpecialCharacters.passwordRequiredSpecialCharacters;
+import static com.aaronbedra.password.PasswordRequiredUpperCaseCharacters.passwordRequiredUpperCaseCharacters;
 
 @RunWith(Traits.class)
 public class PasswordTest {
@@ -39,6 +44,12 @@ public class PasswordTest {
     }
 
     private PasswordConfiguration getConfiguration() {
-        return passwordConfiguration(12, 1, 1, 1, 1);
+        return passwordConfiguration(
+                passwordRequiredLength(12),
+                passwordRequiredLowerCaseCharacters(1),
+                passwordRequiredUpperCaseCharacters(1),
+                passwordRequiredNumberCharacters(1),
+                passwordRequiredSpecialCharacters(1)
+        );
     }
 }
