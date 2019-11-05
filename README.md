@@ -24,7 +24,9 @@ In order to create a test project, you will need to first create a JVM project. 
 
 Simply create a new test file and follow the examples below. Please be aware that the traits will execute live HTTP requests. A network connection that has access to the destination url is required.
 
-## Example
+## Traits
+
+### Web
 
 ```java
 @RunWith(Traits.class)
@@ -39,10 +41,6 @@ public class GetRepsheetTest {
     }
 }
 ```
-
-## Traits
-
-### Web
 
 #### Secure Headers
 
@@ -68,20 +66,63 @@ Collects all cookies presented in the response and ensures they are marked `Http
 
 ### Password
 
+```java
+@RunWith(Traits.class)
+public class PasswordTest {
+    @TestTraits({
+            AtLeastTwelveCharacters.class,
+            AtLeastOneNumber.class,
+            AtLeastOneUpper.class,
+            AtLeastOneLower.class,
+            AtLeastOneSpecial.class
+    })
+    public String passwordGeneratorSingleExecution() {
+        return generatePassword(getConfiguration()).unsafeToString();
+    }
+
+    @TestTraits(Unique.class)
+    public Fn0<String> passwordGeneratorMultipleExecutions() {
+        return () -> generatePassword(getConfiguration()).unsafeToString();
+    }
+
+    @TestTraits({
+            HasRedactedDefaultGetters.class,
+            HasUnsafeToString.class
+    })
+    public Password redactedToString() {
+        return password("testing");
+    }
+
+    private PasswordConfiguration getConfiguration() {
+        return passwordConfiguration(
+                passwordRequiredLength(12),
+                passwordRequiredLowerCaseCharacters(1),
+                passwordRequiredUpperCaseCharacters(1),
+                passwordRequiredNumberCharacters(1),
+                passwordRequiredSpecialCharacters(1)
+        );
+    }
+}
+```
+
 #### Password Generation
 
-The following traits are available on the instance of a password:
+The following traits are available to demonstrate secure password generation:
 
 * AtLeastOneNumber
 * AtLeastOneUpper
 * AtLeastOneLower
 * AtLeastOneSpecial
 * AtLeastTwelveCharacters
-
-The following traits are available on the password generator function:
-
 * Unique
+
+#### Password Objects
+
+The following traits are available on constructed password objects:
+
+* HasRedactedDefaultGetters
+* HasUnsafeToString
 
 ## Contributing
 
-TODO: Write
+Pull requests, questions, and ideas for new test are always welcome. Feel free to open an issue or pull request at any time. The requirement for submission is that the idea be complete and the test suite passing.
