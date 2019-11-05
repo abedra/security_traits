@@ -1,6 +1,6 @@
-# Web Application Security Traits
+# Security Traits
 
-![badge](https://action-badges.now.sh/abedra/web_security_traits?action=Java+CI)
+![badge](https://action-badges.now.sh/abedra/security_traits?action=Java+CI)
 
 This project is meant to serve as a set of unit tests for web applications. It can be used inside of a standalone test project or embedded into a JVM language project test suite.
 
