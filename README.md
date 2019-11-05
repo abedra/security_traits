@@ -2,7 +2,7 @@
 
 ![badge](https://action-badges.now.sh/abedra/security_traits?action=Java+CI)
 
-This project is meant to serve as a set of unit tests for web applications. It can be used inside of a standalone test project or embedded into a JVM language project test suite.
+This project is meant to serve as a set of security focused unit tests. It can be used inside of a standalone test project or embedded into a JVM language project test suite. They should be used to test drive the security aspects of your systems.
 
 ## Installation
 
