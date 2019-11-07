@@ -8,12 +8,16 @@ This project is meant to serve as a set of security focused unit tests. It can b
 
 Maven
 ```xml
-TODO: publish
+<dependency>
+  <groupId>com.aaronbedra</groupId>
+  <artifactId>security-traits</artifactId>
+  <version>0.0.1</version>
+</dependency>
 ```
 
 Gradle
 ```groovy
-TODO: publish
+implementation 'com.aaronbedra:security-traits:0.0.1'
 ```
 
 ## For Non JVM based Projects
