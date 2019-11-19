@@ -1,20 +1,22 @@
 package com.aaronbedra.password;
 
 import com.aaronbedra.tiny.SensitiveString;
-import com.aaronbedra.tiny.TinyType;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Value;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
 import static com.aaronbedra.password.CharacterRange.*;
+import static com.jnape.palatable.lambda.functions.builtin.fn3.FoldLeft.foldLeft;
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 
+@Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Password implements SensitiveString {
     private final String value;
-
-    private Password(String value) {
-        this.value = value;
-    }
 
     @Override
     public String toString() {
@@ -41,31 +43,25 @@ public class Password implements SensitiveString {
         var uppers = randomChars(secureRandom, UPPER, configuration.getUpper().getValue());
         var lowers = randomChars(secureRandom, LOWER, configuration.getLower().getValue());
         var specials = randomChars(secureRandom, SPECIAL, configuration.getSpecial().getValue());
-
-        var currentSize = numbers.size() + uppers.size() + lowers.size() + specials.size();
-        var filler = randomChars(secureRandom, ALL, configuration.getLength().getValue() - currentSize);
-
-        ArrayList<Character> combined = new ArrayList<>() {{
-            addAll(numbers);
-            addAll(uppers);
-            addAll(lowers);
-            addAll(specials);
-            addAll(filler);
-        }};
+        var currentSize = foldLeft((m, v) -> m += v.size(), 0, asList(numbers, uppers, lowers, specials));
+        var rest = randomChars(secureRandom, ALL, configuration.getLength().getValue() - currentSize);
+        var combined = foldLeft((m, v) -> {
+            m.addAll(v);
+            return m;
+        }, new ArrayList<>(), asList(numbers, uppers, lowers, specials, rest));
 
         return password(valueOf(combined));
     }
 
-    private static <T extends TinyType<Integer>> ArrayList<Character> randomChars(
+    private static ArrayList<Character> randomChars(
             SecureRandom secureRandom,
             ArrayList<Character> range,
             int length) {
 
-        ArrayList<Character> characters = new ArrayList<>();
-        for (int i = 0; i < length; i++) {
-            characters.add(range.get(secureRandom.nextInt(range.size())));
-        }
-
-        return characters;
+        return new ArrayList<>() {{
+            for (int i = 0; i < length; i++) {
+                add(range.get(secureRandom.nextInt(range.size())));
+            }
+        }};
     }
 }
