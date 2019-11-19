@@ -1,5 +1,6 @@
 package com.aaronbedra.password;
 
+import com.aaronbedra.password.types.PasswordConfiguration;
 import com.aaronbedra.tiny.SensitiveString;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
