@@ -14,10 +14,9 @@ import static org.junit.Assert.assertTrue;
 public class SecureCookies implements Trait<IO<Requester>> {
     @Override
     public void test(IO<Requester> requester) {
-        requester.flatMap(instance ->
-                instance.getResponse(instance.getHttpsUrl()).flatMap(response ->
-                        instance.getCookieJar().flatMap(cookieJar ->
-                                assertSecure(cookieJar.loadForRequest(response.request().url())))))
+        requester.flatMap(instance -> instance.getResponse(instance.getHttpsUrl())
+                .flatMap(response -> instance.getCookieJar()
+                        .flatMap(cookieJar -> assertSecure(cookieJar.loadForRequest(response.request().url())))))
                 .unsafePerformIO();
     }
 
