@@ -30,9 +30,8 @@ public class SecureHeaders implements Trait<IO<Requester>> {
     private <T extends Header> void getAndAssertSecure(IO<Requester> requester, Class<T> headerClass) {
         requester.flatMap(instance ->
                 instance.getHeaders(instance.getHttpsUrl()).flatMap(headers ->
-                        getHeader(headers, headerClass).flatMap(header -> assertSecureHeader(header, headerClass))
-                )
-        ).unsafePerformIO();
+                        getHeader(headers, headerClass).flatMap(header -> assertSecureHeader(header, headerClass))))
+                .unsafePerformIO();
     }
 
     private <T extends Header> IO<T> getHeader(Headers headers, Class<T> headerClass) {

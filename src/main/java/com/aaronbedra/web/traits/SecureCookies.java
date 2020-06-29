@@ -17,10 +17,8 @@ public class SecureCookies implements Trait<IO<Requester>> {
         requester.flatMap(instance ->
                 instance.getResponse(instance.getHttpsUrl()).flatMap(response ->
                         instance.getCookieJar().flatMap(cookieJar ->
-                                assertSecure(cookieJar.loadForRequest(response.request().url()))
-                        )
-                )
-        ).unsafePerformIO();
+                                assertSecure(cookieJar.loadForRequest(response.request().url())))))
+                .unsafePerformIO();
     }
 
     private IO<Unit> assertSecure(List<Cookie> cookies) {
