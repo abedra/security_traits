@@ -1,8 +1,6 @@
 # Security Traits
 
-![badge](https://action-badges.now.sh/abedra/security_traits?action=Java+CI)
-
-This project is meant to serve as a set of security focused unit tests. It can be used inside of a standalone test project or embedded into a JVM language project test suite. They should be used to test drive the security aspects of your systems.
+This project serves as a set of security focused unit tests. It can be used inside of a standalone test project or embedded into a JVM language project test suite. They should be used to test drive the security aspects of your systems.
 
 ## Installation
 
@@ -11,13 +9,13 @@ Maven
 <dependency>
   <groupId>com.aaronbedra</groupId>
   <artifactId>security-traits</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 </dependency>
 ```
 
 Gradle
 ```groovy
-implementation 'com.aaronbedra:security-traits:0.0.1'
+implementation 'com.aaronbedra:security-traits:0.0.2'
 ```
 
 ## For Non JVM based Projects
@@ -40,8 +38,8 @@ public class GetRepsheetTest {
             SecureRedirect.class,
             SecureCookies.class
     })
-    public IO<Requester> secureHeaders() {
-        return webRequester("getrepsheet.com");
+    public WebRequester secureHeaders() {
+        return new WebRequester("getrepsheet.com");
     }
 }
 ```
