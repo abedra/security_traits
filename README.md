@@ -41,7 +41,7 @@ public class GetRepsheetTest {
             SecureCookies.class
     })
     public IO<Requester> secureHeaders() {
-        return requester("getrepsheet.com");
+        return webRequester("getrepsheet.com");
     }
 }
 ```

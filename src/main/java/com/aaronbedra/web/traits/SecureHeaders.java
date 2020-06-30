@@ -1,6 +1,6 @@
 package com.aaronbedra.web.traits;
 
-import com.aaronbedra.web.Requester;
+import com.aaronbedra.web.WebRequester;
 import com.aaronbedra.web.headers.*;
 import com.jnape.palatable.lambda.io.IO;
 import com.jnape.palatable.traitor.traits.Trait;
@@ -12,9 +12,9 @@ import static com.jnape.palatable.lambda.io.IO.io;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
-public class SecureHeaders implements Trait<IO<Requester>> {
+public class SecureHeaders implements Trait<IO<WebRequester>> {
     @Override
-    public void test(IO<Requester> requester) {
+    public void test(IO<WebRequester> requester) {
         var headerList = asList(
                 XFrameOptions.class,
                 XContentTypeOptions.class,
@@ -27,7 +27,7 @@ public class SecureHeaders implements Trait<IO<Requester>> {
         headerList.forEach(headerClass -> getAndAssertSecure(requester, headerClass));
     }
 
-    private <T extends Header> void getAndAssertSecure(IO<Requester> requester, Class<T> headerClass) {
+    private <T extends Header> void getAndAssertSecure(IO<WebRequester> requester, Class<T> headerClass) {
         requester.flatMap(instance -> instance.getHeaders(instance.getHttpsUrl())
                 .flatMap(headers -> getHeader(headers, headerClass)
                                 .flatMap(header -> assertSecureHeader(header, headerClass))))

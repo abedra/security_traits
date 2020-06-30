@@ -8,25 +8,24 @@ import static com.aaronbedra.web.SimpleCookieJar.simpleCookieJar;
 import static com.jnape.palatable.lambda.io.IO.io;
 
 @Value
-public class Requester {
+public class WebRequester {
     String hostname;
     OkHttpClient okHttpClient;
 
-    private Requester(String hostname, OkHttpClient okHttpClient) {
+    private WebRequester(String hostname, OkHttpClient okHttpClient) {
         this.hostname = hostname;
         this.okHttpClient = okHttpClient;
     }
 
-    public static IO<Requester> requester(String hostname){
-        return io(() -> new Requester(
+    public static IO<WebRequester> requester(String hostname){
+        return io(() -> new WebRequester(
                 hostname,
                 new OkHttpClient()
                         .newBuilder()
                         .followRedirects(false)
                         .followSslRedirects(false)
                         .cookieJar(simpleCookieJar())
-                        .build())
-        );
+                        .build()));
     }
 
     public IO<Response> getResponse(String url) {

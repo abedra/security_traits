@@ -1,6 +1,6 @@
 package com.aaronbedra.web.traits;
 
-import com.aaronbedra.web.Requester;
+import com.aaronbedra.web.WebRequester;
 import com.jnape.palatable.lambda.adt.Unit;
 import com.jnape.palatable.lambda.io.IO;
 import com.jnape.palatable.traitor.traits.Trait;
@@ -11,9 +11,9 @@ import java.util.List;
 import static com.jnape.palatable.lambda.io.IO.io;
 import static org.junit.Assert.assertTrue;
 
-public class SecureCookies implements Trait<IO<Requester>> {
+public class SecureCookies implements Trait<IO<WebRequester>> {
     @Override
-    public void test(IO<Requester> requester) {
+    public void test(IO<WebRequester> requester) {
         requester.flatMap(instance -> instance.getResponse(instance.getHttpsUrl())
                 .flatMap(response -> instance.getCookieJar()
                         .flatMap(cookieJar -> assertSecure(cookieJar.loadForRequest(response.request().url())))))
