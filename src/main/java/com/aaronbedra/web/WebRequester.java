@@ -1,47 +1,39 @@
 package com.aaronbedra.web;
 
+import com.aaronbedra.Requester;
 import com.jnape.palatable.lambda.io.IO;
+import com.jnape.palatable.lambda.monad.transformer.builtin.ReaderT;
 import lombok.Value;
 import okhttp3.*;
 
 import static com.aaronbedra.web.SimpleCookieJar.simpleCookieJar;
 import static com.jnape.palatable.lambda.io.IO.io;
+import static com.jnape.palatable.lambda.monad.transformer.builtin.ReaderT.readerT;
 
 @Value
-public class WebRequester {
+public class WebRequester implements Requester<ReaderT<String, IO<?>, ?>> {
     String hostname;
-    OkHttpClient okHttpClient;
+    IO<OkHttpClient> okHttpClient;
 
-    private WebRequester(String hostname, OkHttpClient okHttpClient) {
+    public WebRequester(String hostname) {
         this.hostname = hostname;
-        this.okHttpClient = okHttpClient;
+        this.okHttpClient = IO.memoize(io(() -> new OkHttpClient()
+                .newBuilder()
+                .followRedirects(false)
+                .followSslRedirects(false)
+                .cookieJar(simpleCookieJar())
+                .build()));
     }
 
-    public static IO<WebRequester> requester(String hostname){
-        return io(() -> new WebRequester(
-                hostname,
-                new OkHttpClient()
-                        .newBuilder()
-                        .followRedirects(false)
-                        .followSslRedirects(false)
-                        .cookieJar(simpleCookieJar())
-                        .build()));
-    }
-
-    public IO<Response> getResponse(String url) {
-        return buildRequest(url).flatMap(request -> io(() -> okHttpClient.newCall(request).execute()));
-    }
-
-    public IO<Headers> getHeaders(String url) {
-        return getResponse(url).fmap(Response::headers);
+    @Override
+    public ReaderT<String, IO<?>, Response> request() {
+        return readerT(url -> io(() -> new Request.Builder().url(url).build())
+                .flatMap(request -> okHttpClient.flatMap(client -> io(() -> client.newCall(request)
+                        .execute()))));
     }
 
     public IO<CookieJar> getCookieJar() {
-        return io(okHttpClient::cookieJar);
-    }
-
-    private IO<Request> buildRequest(String url) {
-        return io(() -> new Request.Builder().url(url).build());
+        return okHttpClient.flatMap(client -> io(client::cookieJar));
     }
 
     public String getHttpUrl() {

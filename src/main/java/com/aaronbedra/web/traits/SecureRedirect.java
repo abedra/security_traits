@@ -12,11 +12,11 @@ import static com.jnape.palatable.lambda.adt.Maybe.maybe;
 import static com.jnape.palatable.lambda.io.IO.io;
 import static org.junit.Assert.assertEquals;
 
-public class SecureRedirect implements Trait<IO<WebRequester>> {
+public class SecureRedirect implements Trait<WebRequester> {
     @Override
-    public void test(IO<WebRequester> requester) {
-        requester.flatMap(instance -> instance.getResponse(instance.getHttpUrl())
-                .flatMap(response -> assertSecureRedirect(instance, response)))
+    public void test(WebRequester requester) {
+        requester.request().<IO<Response>>runReaderT(requester.getHttpUrl())
+                .flatMap(response -> assertSecureRedirect(requester, response))
                 .unsafePerformIO();
     }
 

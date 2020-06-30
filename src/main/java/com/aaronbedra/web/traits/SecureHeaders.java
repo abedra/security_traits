@@ -5,6 +5,7 @@ import com.aaronbedra.web.headers.*;
 import com.jnape.palatable.lambda.io.IO;
 import com.jnape.palatable.traitor.traits.Trait;
 import okhttp3.Headers;
+import okhttp3.Response;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -12,9 +13,9 @@ import static com.jnape.palatable.lambda.io.IO.io;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
-public class SecureHeaders implements Trait<IO<WebRequester>> {
+public class SecureHeaders implements Trait<WebRequester> {
     @Override
-    public void test(IO<WebRequester> requester) {
+    public void test(WebRequester requester) {
         var headerList = asList(
                 XFrameOptions.class,
                 XContentTypeOptions.class,
@@ -27,10 +28,12 @@ public class SecureHeaders implements Trait<IO<WebRequester>> {
         headerList.forEach(headerClass -> getAndAssertSecure(requester, headerClass));
     }
 
-    private <T extends Header> void getAndAssertSecure(IO<WebRequester> requester, Class<T> headerClass) {
-        requester.flatMap(instance -> instance.getHeaders(instance.getHttpsUrl())
+    private <T extends Header> void getAndAssertSecure(WebRequester requester, Class<T> headerClass) {
+        requester.request()
+                .<IO<Response>>runReaderT(requester.getHttpsUrl())
+                .fmap(Response::headers)
                 .flatMap(headers -> getHeader(headers, headerClass)
-                                .flatMap(header -> assertSecureHeader(header, headerClass))))
+                        .flatMap(header -> assertSecureHeader(header, headerClass)))
                 .unsafePerformIO();
     }
 
