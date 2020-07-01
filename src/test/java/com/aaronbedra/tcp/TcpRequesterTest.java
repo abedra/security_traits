@@ -12,6 +12,7 @@ import com.jnape.palatable.lambda.monoid.Monoid;
 import com.jnape.palatable.shoki.impl.StrictQueue;
 import org.junit.Test;
 
+import static com.aaronbedra.tcp.TcpRequester.tcpRequester;
 import static com.jnape.palatable.lambda.adt.Either.left;
 import static com.jnape.palatable.lambda.adt.Either.right;
 import static com.jnape.palatable.lambda.adt.Unit.UNIT;
@@ -34,7 +35,7 @@ public class TcpRequesterTest {
 
     @Test
     public void successfulConnection() {
-        tcpRequester = new TcpRequester<>(new SuccessfulTcpSocket(), 2000);
+        tcpRequester = tcpRequester(new SuccessfulTcpSocket(), 2000);
         Tuple2<Tuple3<String, Integer, Boolean>, HMap> actual = tcpRequester
                 .request()
                 .<Writer<HMap, Tuple3<String, Integer, Boolean>>>runReaderT(80)
@@ -46,7 +47,7 @@ public class TcpRequesterTest {
 
     @Test
     public void failedConnection() {
-        tcpRequester = new TcpRequester<>(new FailedTcpSocket(), 2000);
+        tcpRequester = tcpRequester(new FailedTcpSocket(), 2000);
         Tuple2<Tuple3<String, Integer, Boolean>, HMap> actual = tcpRequester
                 .request()
                 .<Writer<HMap, Tuple3<String, Integer, Boolean>>>runReaderT(80)

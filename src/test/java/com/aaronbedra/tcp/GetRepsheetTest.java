@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import static com.aaronbedra.tcp.TcpRequester.tcpRequester;
 import static com.aaronbedra.tcp.types.TcpSocket.tcpSocket;
 import static com.jnape.palatable.lambda.adt.hlist.HList.tuple;
 import static java.util.Arrays.asList;
@@ -22,11 +23,11 @@ public class GetRepsheetTest {
 
     @TestTraits(OpenPorts.class)
     public Tuple2<TcpRequester<IO<?>>, List<Integer>> foo() {
-        return tuple(new TcpRequester<>(tcpSocket, timeout), asList(80, 443));
+        return tuple(tcpRequester(tcpSocket, timeout), asList(80, 443));
     }
 
     @TestTraits(ClosedPorts.class)
     public Tuple2<TcpRequester<IO<?>>, List<Integer>> closedPorts() {
-        return tuple(new TcpRequester<>(tcpSocket, timeout), asList(8080, 8888));
+        return tuple(tcpRequester(tcpSocket, timeout), asList(8080, 8888));
     }
 }
