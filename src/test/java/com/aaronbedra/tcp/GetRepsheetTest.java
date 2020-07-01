@@ -1,7 +1,7 @@
 package com.aaronbedra.tcp;
 
-import com.aaronbedra.tcp.traits.HasClosedPorts;
-import com.aaronbedra.tcp.traits.HasOpenPorts;
+import com.aaronbedra.tcp.traits.ClosedPorts;
+import com.aaronbedra.tcp.traits.OpenPorts;
 import com.aaronbedra.tcp.types.TcpSocket;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.io.IO;
@@ -20,13 +20,13 @@ public class GetRepsheetTest {
     private static final TcpSocket tcpSocket = tcpSocket("getrepsheet.com");
     private static final int timeout = 2000;
 
-    @TestTraits(HasOpenPorts.class)
-    public Tuple2<TcpRequester<IO<?>, TcpSocket>, List<Integer>> foo() {
+    @TestTraits(OpenPorts.class)
+    public Tuple2<TcpRequester<IO<?>>, List<Integer>> foo() {
         return tuple(new TcpRequester<>(tcpSocket, timeout), asList(80, 443));
     }
 
-    @TestTraits(HasClosedPorts.class)
-    public Tuple2<TcpRequester<IO<?>, TcpSocket>, List<Integer>> closedPorts() {
+    @TestTraits(ClosedPorts.class)
+    public Tuple2<TcpRequester<IO<?>>, List<Integer>> closedPorts() {
         return tuple(new TcpRequester<>(tcpSocket, timeout), asList(8080, 8888));
     }
 }

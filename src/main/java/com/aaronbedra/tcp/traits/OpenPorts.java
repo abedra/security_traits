@@ -12,11 +12,11 @@ import java.util.List;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Into.into;
 import static com.jnape.palatable.lambda.functions.builtin.fn2.Map.map;
 import static com.jnape.palatable.lambda.io.IO.io;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-public class HasClosedPorts implements Trait<Tuple2<TcpRequester<IO<?>, TcpSocket>, List<Integer>>> {
+public class OpenPorts implements Trait<Tuple2<TcpRequester<IO<?>>, List<Integer>>> {
     @Override
-    public void test(Tuple2<TcpRequester<IO<?>, TcpSocket>, List<Integer>> testSubject) {
+    public void test(Tuple2<TcpRequester<IO<?>>, List<Integer>> testSubject) {
         testSubject
                 .pure(testSubject)
                 .fmap(into((requester, ports) -> map(port -> requester
@@ -24,15 +24,15 @@ public class HasClosedPorts implements Trait<Tuple2<TcpRequester<IO<?>, TcpSocke
                         .<IO<Tuple3<String, Integer, Boolean>>>runReaderT(port), ports)))
                 ._2()
                 .forEach(responseIO -> responseIO
-                        .flatMap(response -> io(() -> assertPortClosed(response)))
+                        .flatMap(response -> io(() -> assertPortAvailable(response)))
                         .unsafePerformIO());
     }
 
-    private void assertPortClosed(Tuple3<String, Integer, Boolean> response) {
-        assertFalse(failureMessage(response._1(), response._2()), response._3());
+    private void assertPortAvailable(Tuple3<String, Integer, Boolean> response) {
+        assertTrue(failureMessage(response._1(), response._2()), response._3());
     }
 
     private String failureMessage(String host, int port) {
-        return host + ":" + port + " is available";
+        return host + ":" + port + " is not available";
     }
 }
