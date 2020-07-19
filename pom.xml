@@ -147,6 +147,17 @@
         </dependency>
         <dependency>
             <groupId>com.jnape.palatable</groupId>
+            <artifactId>lambda</artifactId>
+            <version>5.2.0</version>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jnape.palatable</groupId>
             <artifactId>shoki</artifactId>
             <version>1.0-alpha-1</version>
         </dependency>
