@@ -1,4 +1,4 @@
-package com.aaronbedra.web;
+package com.aaronbedra.web.request;
 
 import lombok.Value;
 import okhttp3.Cookie;

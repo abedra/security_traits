@@ -1,46 +1,62 @@
 package com.aaronbedra.web;
 
-import com.aaronbedra.Requester;
-import com.jnape.palatable.lambda.io.IO;
-import com.jnape.palatable.lambda.monad.transformer.builtin.ReaderT;
-import lombok.Value;
-import okhttp3.*;
+import com.aaronbedra.web.request.Hostname;
+import com.aaronbedra.web.request.RestClient;
+import com.jnape.palatable.lambda.monad.MonadRec;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
+import okhttp3.Response;
 
-import static com.aaronbedra.web.SimpleCookieJar.simpleCookieJar;
-import static com.jnape.palatable.lambda.io.IO.io;
-import static com.jnape.palatable.lambda.monad.transformer.builtin.ReaderT.readerT;
+import java.util.List;
 
-@Value
-public class WebRequester implements Requester<ReaderT<String, IO<?>, ?>> {
-    String hostname;
-    IO<OkHttpClient> okHttpClient;
+public final class WebRequester<M extends MonadRec<?, M>, CookieType> {
+    private final Hostname hostname;
+    private final RestClient<M, Request, Response, CookieType> restClient;
 
-    public WebRequester(String hostname) {
+    private WebRequester(
+            Hostname hostname,
+            RestClient<M, Request, Response, CookieType> restClient) {
+
         this.hostname = hostname;
-        this.okHttpClient = IO.memoize(io(() -> new OkHttpClient()
-                .newBuilder()
-                .followRedirects(false)
-                .followSslRedirects(false)
-                .cookieJar(simpleCookieJar())
-                .build()));
+        this.restClient = restClient;
     }
 
-    @Override
-    public ReaderT<String, IO<?>, Response> request() {
-        return readerT(url -> io(() -> new Request.Builder().url(url).build())
-                .flatMap(request -> okHttpClient.flatMap(client -> io(() -> client.newCall(request)
-                        .execute()))));
+    public static <M extends MonadRec<?, M>, CookieType> WebRequester<M, CookieType> webRequester2(
+            Hostname hostname,
+            RestClient<M, Request, Response, CookieType> restClient) {
+
+        return new WebRequester<>(hostname, restClient);
     }
 
-    public IO<CookieJar> getCookieJar() {
-        return okHttpClient.flatMap(client -> io(client::cookieJar));
+    public MonadRec<Response, M> requestHttp() {
+        return restClient.request(buildRequest(getHttpUrl()));
     }
 
-    public String getHttpUrl() {
-        return "http://" + hostname;
+    public MonadRec<Response, M> requestHttps() {
+        return restClient.request(buildRequest(getHttpsUrl()));
     }
 
-    public String getHttpsUrl() {
-        return "https://" + hostname;
+    public List<CookieType> getCookies(HttpUrl url) {
+        return restClient.getCookies(url);
+    }
+
+    public HttpUrl getHttpUrl() {
+        return new HttpUrl
+                .Builder()
+                .scheme("http")
+                .host(hostname.getValue())
+                .build();
+    }
+
+    public HttpUrl getHttpsUrl() {
+        return new HttpUrl
+                .Builder()
+                .scheme("https")
+                .host(hostname.getValue())
+                .build();
+    }
+
+    private Request buildRequest(HttpUrl url) {
+        return new Request.Builder().url(url).build();
     }
 }
