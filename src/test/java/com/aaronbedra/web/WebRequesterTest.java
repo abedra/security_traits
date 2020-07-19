@@ -16,6 +16,8 @@ import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.consta
 import static com.jnape.palatable.lambda.functor.builtin.State.state;
 import static com.jnape.palatable.lambda.monad.transformer.builtin.ReaderT.readerT;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static testsupport.matchers.StateMatcher.whenEvaluated;
 
@@ -89,6 +91,17 @@ public class WebRequesterTest {
                 .coerce();
 
         assertThat(state, whenEvaluated(response, "body"));
+    }
+
+    @Test
+    public void cookies() {
+        Response response = responseBuilder.code(200).build();
+        ReaderT<Request, State<Response, ?>, Response> responseReaderT = readerT(constantly(state(response)));
+        TestClient testClient = new TestClient(responseReaderT, x -> singletonList(new TestCookie("test")));
+        WebRequester<State<Response, ?>, TestCookie> webRequester = WebRequester.webRequester(hostname("localhost"), testClient);
+        List<TestCookie> cookies = webRequester.getCookies(HttpUrl.parse("https://localhost"));
+
+        assertThat(cookies, equalTo(singletonList(new TestCookie("test"))));
     }
 
     private static class TestClient extends RestClient<State<Response, ?>, Request, Response, TestCookie> {
