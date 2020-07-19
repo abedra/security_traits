@@ -11,22 +11,22 @@ import org.junit.runner.RunWith;
 
 import static com.aaronbedra.web.request.Hostname.hostname;
 import static com.aaronbedra.web.request.OkHttpRestClient.okHttpRestClient;
-import static com.aaronbedra.web.WebRequester.webRequester2;
+import static com.aaronbedra.web.WebRequester.webRequester;
 
 @RunWith(Traits.class)
 public class GetRepsheetTest {
     @TestTraits(SecureHeaders.class)
     public WebRequester<IO<?>, Cookie> secureHeaders() {
-        return webRequester2(hostname("getrepsheet.com"), okHttpRestClient());
+        return webRequester(hostname("getrepsheet.com"), okHttpRestClient());
     }
 
     @TestTraits(SecureRedirect.class)
     public WebRequester<IO<?>, Cookie> secureRedirect() {
-        return webRequester2(hostname("getrepsheet.com"), okHttpRestClient());
+        return webRequester(hostname("getrepsheet.com"), okHttpRestClient());
     }
 
     @TestTraits(SecureCookies.class)
     public WebRequester<IO<?>, Cookie> secureCookies() {
-        return webRequester2(hostname("getrepsheet.com"), okHttpRestClient());
+        return webRequester(hostname("getrepsheet.com"), okHttpRestClient());
     }
 }

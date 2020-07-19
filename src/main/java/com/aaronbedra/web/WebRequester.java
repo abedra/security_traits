@@ -21,7 +21,7 @@ public final class WebRequester<M extends MonadRec<?, M>, CookieType> {
         this.restClient = restClient;
     }
 
-    public static <M extends MonadRec<?, M>, CookieType> WebRequester<M, CookieType> webRequester2(
+    public static <M extends MonadRec<?, M>, CookieType> WebRequester<M, CookieType> webRequester(
             Hostname hostname,
             RestClient<M, Request, Response, CookieType> restClient) {
 
