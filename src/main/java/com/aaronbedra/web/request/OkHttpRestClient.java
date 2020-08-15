@@ -27,9 +27,8 @@ public class OkHttpRestClient extends RestClient<IO<?>, Request, Response, Cooki
     }
 
     private static ReaderT<Request, IO<?>, Response> reader(OkHttpClient okHttpClient) {
-        CompletableFuture<Response> responseFuture = new CompletableFuture<>();
-
         return readerT(request -> IO.externallyManaged(() -> {
+            CompletableFuture<Response> responseFuture = new CompletableFuture<>();
             okHttpClient.newCall(request).enqueue(responseCallback(responseFuture));
             return responseFuture;
         }));
