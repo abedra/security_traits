@@ -1,56 +1,40 @@
 package com.aaronbedra.web.traits;
 
 import com.aaronbedra.web.WebRequester;
-import com.aaronbedra.web.headers.*;
-import com.jnape.palatable.lambda.functions.Fn0;
+import com.aaronbedra.web.headers.Header;
+import com.jnape.palatable.lambda.adt.hlist.Tuple2;
+import com.jnape.palatable.lambda.functions.specialized.SideEffect;
 import com.jnape.palatable.lambda.io.IO;
+import com.jnape.palatable.shoki.api.Sequence;
 import com.jnape.palatable.traitor.traits.Trait;
 import okhttp3.Cookie;
 import okhttp3.Headers;
 
-import java.lang.reflect.InvocationTargetException;
-
+import static com.jnape.palatable.lambda.functions.Fn0.fn0;
+import static com.jnape.palatable.lambda.functions.specialized.SideEffect.sideEffect;
 import static com.jnape.palatable.lambda.io.IO.io;
-import static java.util.Arrays.asList;
+import static com.jnape.palatable.lambda.traversable.LambdaIterable.wrap;
 import static org.junit.Assert.assertEquals;
 
-public class SecureHeaders implements Trait<WebRequester<IO<?>, Cookie>> {
+public class SecureHeaders implements Trait<Tuple2<WebRequester<IO<?>, Cookie>, Sequence<Header>>> {
     @Override
-    public void test(WebRequester<IO<?>, Cookie> requester) {
-        var headerList = asList(
-                XFrameOptions.class,
-                XContentTypeOptions.class,
-                XXSSProtection.class,
-                StrictTransportSecurity.class,
-                XDownloadOptions.class,
-                XPermittedCrossDomainPolicy.class
-        );
-
-        headerList.forEach(headerClass -> getAndAssertSecure(requester, headerClass));
-    }
-
-    private <T extends Header> void getAndAssertSecure(WebRequester<IO<?>, Cookie> requester, Class<T> headerClass) {
-        requester.requestHttps()
-                .flatMap(response -> io((Fn0<Headers>) response::headers))
-                .flatMap(headers -> getHeader(headers, headerClass)
-                        .flatMap(header -> assertSecureHeader(header, headerClass)))
-                .<IO<T>>coerce()
+    public void test(Tuple2<WebRequester<IO<?>, Cookie>, Sequence<Header>> inputs) {
+        getResponseHeaders(inputs._1())
+                .fmap(headers -> wrap(inputs._2()).fmap(header -> assertSecure(headers, header)).unwrap())
+                .flatMap(sideEffects -> io(() -> sideEffects.forEach(sideEffect -> sideEffect.toRunnable().run())))
                 .unsafePerformIO();
     }
 
-    private <T extends Header> IO<T> getHeader(Headers headers, Class<T> headerClass) {
-        return io(() -> headerClass
-                .getConstructor(new Class[]{String.class})
-                .newInstance(headers.get(invokeStaticGetName(headerClass))));
+    private IO<Headers> getResponseHeaders(WebRequester<IO<?>, Cookie> requester) {
+        return requester.requestHttps()
+                .flatMap(response -> io(fn0(response::headers)))
+                .coerce();
     }
 
-    private <T extends Header> IO<T> assertSecureHeader(T header, Class<T> headerClass) {
-        return io(() -> assertEquals(invokeStaticGetName(headerClass), header.getExpectedValue(), header.getValue()))
-                .discardL(io(header));
-    }
-
-    private <T extends Header> String invokeStaticGetName(Class<T> headerClass)
-            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        return (String) headerClass.getMethod("getName").invoke(null);
+    private SideEffect assertSecure(Headers headers, Header header) {
+        return sideEffect(() -> assertEquals(
+                header.getName().getValue(),
+                header.getExpectedValue().getValue(),
+                headers.get(header.getName().getValue())));
     }
 }

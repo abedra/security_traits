@@ -1,10 +1,10 @@
 package com.aaronbedra.web.headers;
 
-public interface Header {
-    static String getName() {
-        throw new IllegalArgumentException();
-    }
+import com.aaronbedra.web.headers.types.HeaderExpectedValue;
+import com.aaronbedra.web.headers.types.HeaderName;
 
-    String getValue();
-    String getExpectedValue();
+public interface Header {
+    HeaderName getName();
+
+    HeaderExpectedValue getExpectedValue();
 }
