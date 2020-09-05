@@ -15,8 +15,12 @@ public class XPermittedCrossDomainPolicy implements Header {
     HeaderName name;
     HeaderExpectedValue expectedValue;
 
+    public static XPermittedCrossDomainPolicy xPermittedCrossDomainPolicy(HeaderName name, HeaderExpectedValue expectedValue) {
+        return new XPermittedCrossDomainPolicy(name, expectedValue);
+    }
+
     public static XPermittedCrossDomainPolicy xPermittedCrossDomainPolicy() {
-        return new XPermittedCrossDomainPolicy(
+        return xPermittedCrossDomainPolicy(
                 headerName("X-Permitted-Cross-Domain-Policy"),
                 headerExpectedValue("none"));
     }

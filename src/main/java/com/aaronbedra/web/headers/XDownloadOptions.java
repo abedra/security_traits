@@ -15,8 +15,12 @@ public class XDownloadOptions implements Header {
     HeaderName name;
     HeaderExpectedValue expectedValue;
 
+    public static XDownloadOptions xDownloadOptions(HeaderName name, HeaderExpectedValue expectedValue) {
+        return new XDownloadOptions(name, expectedValue);
+    }
+
     public static XDownloadOptions xDownloadOptions() {
-        return new XDownloadOptions(
+        return xDownloadOptions(
                 headerName("X-Download-Options"),
                 headerExpectedValue("noopen"));
     }

@@ -15,8 +15,12 @@ public class XXSSProtection implements Header {
     HeaderName name;
     HeaderExpectedValue expectedValue;
 
+    public static XXSSProtection xxssProtection(HeaderName name, HeaderExpectedValue expectedValue) {
+        return new XXSSProtection(name, expectedValue);
+    }
+
     public static XXSSProtection xxssProtection() {
-        return new XXSSProtection(
+        return xxssProtection(
                 headerName("X-XSS-Protection"),
                 headerExpectedValue("1; mode=block"));
     }

@@ -15,8 +15,12 @@ public class XFrameOptions implements Header {
     HeaderName name;
     HeaderExpectedValue expectedValue;
 
+    public static XFrameOptions xFrameOptions(HeaderName name, HeaderExpectedValue expectedValue) {
+        return new XFrameOptions(name, expectedValue);
+    }
+
     public static XFrameOptions xFrameOptions() {
-        return new XFrameOptions(
+        return xFrameOptions(
                 headerName("X-Frame-Options"),
                 headerExpectedValue("DENY"));
     }

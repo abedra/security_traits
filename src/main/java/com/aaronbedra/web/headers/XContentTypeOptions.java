@@ -15,8 +15,12 @@ public class XContentTypeOptions implements Header {
     HeaderName name;
     HeaderExpectedValue expectedValue;
 
+    public static XContentTypeOptions xContentTypeOptions(HeaderName name, HeaderExpectedValue expectedValue) {
+        return new XContentTypeOptions(name, expectedValue);
+    }
+
     public static XContentTypeOptions xContentTypeOptions() {
-        return new XContentTypeOptions(
+        return xContentTypeOptions(
                 headerName("X-Content-Type-Options"),
                 headerExpectedValue("nosniff"));
     }

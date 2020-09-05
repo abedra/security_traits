@@ -15,8 +15,12 @@ public class StrictTransportSecurity implements Header {
     HeaderName name;
     HeaderExpectedValue expectedValue;
 
+    public static StrictTransportSecurity strictTransportSecurity(HeaderName name, HeaderExpectedValue expectedValue) {
+        return new StrictTransportSecurity(name, expectedValue);
+    }
+
     public static StrictTransportSecurity strictTransportSecurity() {
-        return new StrictTransportSecurity(
+        return strictTransportSecurity(
                 headerName("Strict-Transport-Security"),
                 headerExpectedValue("max-age=31536000; includeSubDomains"));
     }
