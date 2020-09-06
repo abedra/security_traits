@@ -9,13 +9,13 @@ Maven
 <dependency>
   <groupId>com.aaronbedra</groupId>
   <artifactId>security-traits</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 
 Gradle
 ```groovy
-implementation 'com.aaronbedra:security-traits:0.0.2'
+implementation 'com.aaronbedra:security-traits:0.0.3'
 ```
 
 ## For Non JVM based Projects
