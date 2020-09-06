@@ -1,6 +1,6 @@
 package com.aaronbedra.web.traits;
 
-import com.aaronbedra.web.WebRequester;
+import com.aaronbedra.web.types.WebRequestTestSubject;
 import com.jnape.palatable.lambda.functions.specialized.SideEffect;
 import com.jnape.palatable.lambda.io.IO;
 import com.jnape.palatable.traitor.traits.Trait;
@@ -11,11 +11,11 @@ import java.util.List;
 import static com.jnape.palatable.lambda.functions.specialized.SideEffect.sideEffect;
 import static org.junit.Assert.assertTrue;
 
-public class SecureCookies implements Trait<WebRequester<IO<?>, Cookie>> {
+public class SecureCookies implements Trait<WebRequestTestSubject<IO<?>, Cookie>> {
     @Override
-    public void test(WebRequester<IO<?>, Cookie> requester) {
-        requester.requestHttps()
-                .fmap(response -> assertSecure(requester.getCookies(response.request().url())))
+    public void test(WebRequestTestSubject<IO<?>, Cookie> testSubject) {
+        testSubject.getRequester().requestHttps()
+                .fmap(response -> assertSecure(testSubject.getRequester().getCookies(response.request().url())))
                 .<IO<SideEffect>>coerce()
                 .unsafePerformIO();
     }

@@ -1,6 +1,7 @@
 package com.aaronbedra.web;
 
 import com.aaronbedra.web.request.RestClient;
+import com.aaronbedra.web.request.WebRequester;
 import com.jnape.palatable.lambda.functions.Fn1;
 import com.jnape.palatable.lambda.functor.builtin.State;
 import com.jnape.palatable.lambda.monad.transformer.builtin.ReaderT;
@@ -11,7 +12,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.aaronbedra.web.request.Hostname.hostname;
+import static com.aaronbedra.web.types.Hostname.hostname;
 import static com.jnape.palatable.lambda.functions.builtin.fn1.Constantly.constantly;
 import static com.jnape.palatable.lambda.functor.builtin.State.state;
 import static com.jnape.palatable.lambda.monad.transformer.builtin.ReaderT.readerT;

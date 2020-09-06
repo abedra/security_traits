@@ -1,7 +1,6 @@
-package com.aaronbedra.web;
+package com.aaronbedra.web.request;
 
-import com.aaronbedra.web.request.Hostname;
-import com.aaronbedra.web.request.RestClient;
+import com.aaronbedra.web.types.Hostname;
 import com.jnape.palatable.lambda.monad.MonadRec;
 import okhttp3.HttpUrl;
 import okhttp3.Request;

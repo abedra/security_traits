@@ -1,5 +1,6 @@
 package com.aaronbedra.web.headers;
 
+import com.aaronbedra.web.types.Header;
 import com.jnape.palatable.shoki.api.Sequence;
 
 import static com.aaronbedra.web.headers.StrictTransportSecurity.strictTransportSecurity;

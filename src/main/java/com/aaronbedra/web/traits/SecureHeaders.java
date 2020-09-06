@@ -1,7 +1,8 @@
 package com.aaronbedra.web.traits;
 
-import com.aaronbedra.web.WebRequester;
-import com.aaronbedra.web.headers.Header;
+import com.aaronbedra.web.request.WebRequester;
+import com.aaronbedra.web.types.Header;
+import com.aaronbedra.web.types.WebRequestTestSubject;
 import com.jnape.palatable.lambda.adt.hlist.Tuple2;
 import com.jnape.palatable.lambda.functions.specialized.SideEffect;
 import com.jnape.palatable.lambda.io.IO;
@@ -16,11 +17,11 @@ import static com.jnape.palatable.lambda.io.IO.io;
 import static com.jnape.palatable.lambda.traversable.LambdaIterable.wrap;
 import static org.junit.Assert.assertEquals;
 
-public class SecureHeaders implements Trait<Tuple2<WebRequester<IO<?>, Cookie>, Sequence<Header>>> {
+public class SecureHeaders implements Trait<WebRequestTestSubject<IO<?>, Cookie>> {
     @Override
-    public void test(Tuple2<WebRequester<IO<?>, Cookie>, Sequence<Header>> inputs) {
-        getResponseHeaders(inputs._1())
-                .fmap(headers -> wrap(inputs._2()).fmap(header -> assertSecure(headers, header)).unwrap())
+    public void test(WebRequestTestSubject<IO<?>, Cookie> testSubject) {
+        getResponseHeaders(testSubject.getRequester())
+                .fmap(headers -> wrap(testSubject.getVerifiedHeaders()).fmap(header -> assertSecure(headers, header)).unwrap())
                 .flatMap(sideEffects -> io(() -> sideEffects.forEach(sideEffect -> sideEffect.toRunnable().run())))
                 .unsafePerformIO();
     }

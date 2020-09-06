@@ -1,4 +1,4 @@
-package com.aaronbedra.web.headers.types;
+package com.aaronbedra.web.types;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;

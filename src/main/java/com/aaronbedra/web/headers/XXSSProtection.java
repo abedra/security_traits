@@ -1,12 +1,13 @@
 package com.aaronbedra.web.headers;
 
-import com.aaronbedra.web.headers.types.HeaderExpectedValue;
-import com.aaronbedra.web.headers.types.HeaderName;
+import com.aaronbedra.web.types.Header;
+import com.aaronbedra.web.types.HeaderExpectedValue;
+import com.aaronbedra.web.types.HeaderName;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
-import static com.aaronbedra.web.headers.types.HeaderExpectedValue.headerExpectedValue;
-import static com.aaronbedra.web.headers.types.HeaderName.headerName;
+import static com.aaronbedra.web.types.HeaderExpectedValue.headerExpectedValue;
+import static com.aaronbedra.web.types.HeaderName.headerName;
 import static lombok.AccessLevel.PRIVATE;
 
 @Value
