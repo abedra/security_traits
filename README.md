@@ -24,7 +24,7 @@ In order to create a test project, you will need to first create a JVM project. 
 
 ## For JVM Based Projects
 
-Simply create a new test file and follow the examples below. Please be aware that the traits will execute live HTTP requests. A network connection that has access to the destination url is required.
+Simply create a new test file and follow the examples below. Please be aware the traits will execute live HTTP requests. A network connection that has access to the destination url is required.
 
 ## Traits
 
@@ -38,8 +38,8 @@ public class GetRepsheetTest {
             SecureRedirect.class,
             SecureCookies.class
     })
-    public WebRequester secureHeaders() {
-        return new WebRequester("getrepsheet.com");
+    public WebRequestTestSubject<IO<?>, Cookie> secureHeaders() {
+        return okHttpWebRequestTestSubject(hostname("getrepsheet.com"));
     }
 }
 ```
@@ -48,12 +48,14 @@ public class GetRepsheetTest {
 
 Makes the following assertions on response headers:
 
-| Header                   | Expected Value |
-|--------------------------|------------------------------------|
-|X-Frame-Options           | DENY                               |
-|X-Content-Type-Options    | nosniff                            |
-|X-XSS-Protection          | 1; mode=block                      |
-|Strict-Transport-Security | max-age=31536000; includeSubDomains|
+| Header                         | Expected Value                     |
+|--------------------------------|------------------------------------|
+|X-Frame-Options                 | DENY                               |
+|X-Content-Type-Options          | nosniff                            |
+|X-XSS-Protection                | 1; mode=block                      |
+|Strict-Transport-Security       | max-age=31536000; includeSubDomains|
+|X-Download-Options              | noopen                             |
+|X-Permitted-Cross-Domain-Policy | none                               |
 
 #### Secure Redirect
 
