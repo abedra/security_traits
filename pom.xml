@@ -23,7 +23,7 @@
         <connection>scm:git:git@github.com:abedra/security_traits.git</connection>
         <developerConnection>scm:git:git@github.com:abedra/security_traits.git</developerConnection>
         <url>https://github.com/abedra/security_traits</url>
-        <tag>HEAD</tag>
+        <tag>security-traits-0.0.3</tag>
     </scm>
 
     <properties>
@@ -32,7 +32,7 @@
 
     <groupId>com.aaronbedra</groupId>
     <artifactId>security-traits</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
 
     <build>
         <plugins>
