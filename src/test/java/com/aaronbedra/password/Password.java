@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
 @Value
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Password implements SensitiveString {
-    private final String value;
+    String value;
 
     @Override
     public String toString() {

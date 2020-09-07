@@ -1,4 +1,4 @@
-package com.aaronbedra.web;
+package com.aaronbedra.security_traits.example.web;
 
 import com.aaronbedra.web.traits.SecureCookies;
 import com.aaronbedra.web.traits.SecureHeaders;

@@ -1,5 +1,6 @@
-package com.aaronbedra.tcp;
+package com.aaronbedra.security_traits.example.tcp;
 
+import com.aaronbedra.tcp.TcpRequester;
 import com.aaronbedra.tcp.traits.ClosedPorts;
 import com.aaronbedra.tcp.traits.OpenPorts;
 import com.aaronbedra.tcp.types.TcpSocket;
